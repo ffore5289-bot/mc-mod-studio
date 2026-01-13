@@ -18,14 +18,26 @@ jobs:
         with:
           flutter-version: '3.22.0'
 
+      - name: Create Flutter project scaffold
+        run: |
+          flutter create -t app app --project-name mc_mod_studio --org com.ffore.mcmodstudio
+
+      - name: Copy source into scaffold
+        run: |
+          rm -rf app/lib
+          cp -R lib app/lib
+          cp pubspec.yaml app/pubspec.yaml
+
       - name: Install dependencies
+        working-directory: app
         run: flutter pub get
 
       - name: Build APK
+        working-directory: app
         run: flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: mc-mod-studio-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: app/build/app/outputs/flutter-apk/app-release.apk
